@@ -7,7 +7,8 @@ import {
   Row,
   Col,
   Table,
-  Alert
+  Alert,
+  CustomInput
 } from "reactstrap";
 import api from "../services/api";
 import { Link } from "react-router-dom";
@@ -19,7 +20,7 @@ class Dashboard extends React.Component {
     error: "",
     visible: false,
     color: '',
-    message: ''
+    message: '',
   }
   componentDidMount() {
     try {
@@ -65,6 +66,10 @@ class Dashboard extends React.Component {
     this.setState({ visible: !this.state.visible });
   }
 
+  handleAdmin = async (id) => {
+    await api.put(`/users/${id}/toggle-admin`);
+  }
+
   render() {
     const {users} = this.state;
 
@@ -90,9 +95,8 @@ class Dashboard extends React.Component {
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Email</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                        <th>Admin</th>
+                        <th colSpan="3">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -101,6 +105,14 @@ class Dashboard extends React.Component {
                           <td>{user.Profile.first_name}</td>
                           <td>{user.Profile.last_name}</td>
                           <td>{user.email}</td>
+                          <td>
+                            <CustomInput
+                              defaultChecked={user.admin}
+                              type="switch"
+                              id={`exampleCustomSwitch${user.id}`}
+                              onChange={() => this.handleAdmin(user.id) }
+                            />
+                          </td>
                           <td>
                             <Link to={`/admin/user-page/${user.id}/edit`} className="text-warning">
                               <i className="nc-icon nc-settings-gear-65" />
