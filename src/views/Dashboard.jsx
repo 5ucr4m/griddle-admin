@@ -11,7 +11,7 @@ import {
 } from "reactstrap";
 import api from "../services/api";
 import { Link } from "react-router-dom";
-
+import { isAuthenticated } from "../services/auth";
 
 class Dashboard extends React.Component {
   state = {
@@ -23,8 +23,14 @@ class Dashboard extends React.Component {
   }
   componentDidMount() {
     try {
-      this.loadUsers()
+      if (!isAuthenticated()) {
+        return this.props.history.push('/signin');
+      }
+      this.loadUsers();
     } catch (error) {
+      console.log('====================================');
+      console.log(error);
+      console.log('====================================');
       this.setState({
         color: 'danger',
         visible: true,
@@ -32,12 +38,19 @@ class Dashboard extends React.Component {
           "Error"
       });
     }
+  }
 
-  }
   loadUsers = async () => {
-    const response = await api.get("/users");
-    this.setState({ users: response.data });
+    try {
+      const response = await api.get("/users");
+      this.setState({ users: response.data });
+    } catch (error) {
+      console.log('====================================');
+      console.log(error);
+      console.log('====================================');
+    }
   }
+
   handleRemoveUser = async (id) => {
     await api.delete(`/users/${id}`);
     this.setState({
@@ -47,9 +60,11 @@ class Dashboard extends React.Component {
     });
     this.loadUsers()
   }
+
   onDismiss = () => {
     this.setState({ visible: !this.state.visible });
   }
+
   render() {
     const {users} = this.state;
 

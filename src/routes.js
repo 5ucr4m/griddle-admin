@@ -1,5 +1,6 @@
 import Dashboard from "views/Dashboard.jsx";
 import UserPage from "views/User.jsx";
+import SignOut from "views/SignOut.jsx";
 // import Notifications from "views/Notifications.jsx";
 // import Icons from "views/Icons.jsx";
 // import Typography from "views/Typography.jsx";
@@ -22,6 +23,12 @@ var routes = [
     component: UserPage,
     layout: "/admin",
     hidden: true
+  },
+  {
+    path: "/signout",
+    name: "Logout",
+    component: SignOut,
+    layout: "/admin",
   },
   // {
   //   path: "/icons",
