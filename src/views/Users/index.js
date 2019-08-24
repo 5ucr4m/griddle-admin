@@ -15,6 +15,7 @@ import api from "../../services/api";
 import { isAuthenticated } from "../../services/auth";
 import pencilIcon from '../../assets/img/icons/pencil.svg';
 import binIcon from '../../assets/img/icons/bin.svg';
+import Moment from 'react-moment';
 
 class UserList extends React.Component {
   constructor(props) {
@@ -60,7 +61,8 @@ class UserList extends React.Component {
     }
   }
 
-  handleRemoveUser = async (id) => {
+  handleRemoveUser = async (e, id) => {
+    e.preventDefault();
     await api.delete(`/users/${id}`);
     this.setState({
       color: 'success',
@@ -70,7 +72,8 @@ class UserList extends React.Component {
     this.loadUsers()
   }
 
-  handleRestoreUser = async (id) => {
+  handleRestoreUser = async (e, id) => {
+    e.preventDefault();
     await api.put(`/users/${id}/restore`);
     this.setState({
       color: 'success',
@@ -95,7 +98,7 @@ class UserList extends React.Component {
         return (
           <>
             <td>
-              <Link className="text-danger" to="#" onClick={() => this.handleRestoreUser(user.id)}>
+              <Link className="text-danger" to="#" onClick={(e) => this.handleRestoreUser(e, user.id)}>
                 Restore
               </Link>
             </td>
@@ -105,7 +108,7 @@ class UserList extends React.Component {
         return (
           <>
             <td>
-              <Link className="text-danger" to="#" onClick={() => this.handleRemoveUser(user.id)}>
+              <Link className="text-danger" to="#" onClick={(e) => this.handleRemoveUser(e, user.id)}>
                 <img src={binIcon} alt="" className="nc-icon" />
               </Link>
             </td>
@@ -133,6 +136,7 @@ class UserList extends React.Component {
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Email</th>
+                    <th>Created at</th>
                     <th>Admin</th>
                     <th colSpan="3">Actions</th>
                   </tr>
@@ -143,6 +147,7 @@ class UserList extends React.Component {
                       <td>{user.profile && user.profile.first_name}</td>
                       <td>{user.profile && user.profile.last_name}</td>
                       <td>{user.email}</td>
+                      <td><Moment>{user.createdAt}</Moment></td>
                       <td>
                         <CustomInput
                           defaultChecked={user.admin}

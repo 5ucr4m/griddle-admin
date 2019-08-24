@@ -55,22 +55,24 @@ class PictureList extends React.Component {
     }
   }
 
-  handleRemovePicture = async (id) => {
+  handleRemovePicture = async (e, id) => {
+    e.preventDefault();
     await api.delete(`/pictures/${id}`);
     this.setState({
       color: 'success',
       visible: true,
-      message: "User deleted!"
+      message: "Picture deleted!"
     });
     this.loadPictures()
   }
 
-  handleRestorePicture = async (id) => {
+  handleRestorePicture = async (e, id) => {
+    e.preventDefault();
     await api.put(`/pictures/${id}/restore`);
     this.setState({
       color: 'success',
       visible: true,
-      message: "User restored!"
+      message: "Picture restored!"
     });
     this.loadPictures();
   }
@@ -90,7 +92,7 @@ class PictureList extends React.Component {
         return (
           <>
             <td>
-              <Link className="text-danger" to="#" onClick={() => this.handleRestorePicture(picture.id)}>
+              <Link className="text-danger" to="#" onClick={(e) => this.handleRestorePicture(e, picture.id)}>
                 Restore
               </Link>
             </td>
@@ -100,7 +102,7 @@ class PictureList extends React.Component {
         return (
           <>
             <td>
-              <Link className="text-danger" to="#" onClick={() => this.handleRemovePicture(picture.id)}>
+              <Link className="text-danger" to="#" onClick={(e) => this.handleRemovePicture(e, picture.id)}>
                 <img src={binIcon} alt="" className="nc-icon" />
               </Link>
             </td>
@@ -127,17 +129,26 @@ class PictureList extends React.Component {
                 <thead className="text-primary">
                   <tr>
                     <th>Name</th>
-                    <th colSpan="3">Actions</th>
+                    <th>Links</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {pictures.map(picture => (
                     <tr key={picture.id}>
                       <td>
-                        <Link className="text-info" to={`/admin/pictures/${picture.id}`} onClick={() => this.handleRemovePicture(picture.id)}>
-                          {picture.name}
-                        </Link>
+                        {picture.name}
                       </td>
+                      <td>
+                        <Link className="text-info" to={`/admin/pictures/${picture.id}`} >
+                          Comments
+                          </Link>
+                      </td>
+                      {/* <td>
+                        <Link className="text-info" to={`/admin/pictures/${picture.id}`} onClick={() => this.handleRemovePicture(picture.id)}>
+                          Votes
+                        </Link>
+                      </td> */}
                       {pictureActions(picture)}
                     </tr>
                   ))}

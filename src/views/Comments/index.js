@@ -56,7 +56,7 @@ class CommentIndex extends React.Component {
     }
   }
 
-  handleRemovePicture = async (id) => {
+  handleRemoveComment = async (e, id) => {
     await api.delete(`/comments/${id}`);
     this.setState({
       color: 'success',
@@ -66,7 +66,7 @@ class CommentIndex extends React.Component {
     this.loadComments()
   }
 
-  handleRestorePicture = async (id) => {
+  handleRestoreComment = async (e, id) => {
     await api.put(`/comments/${id}/restore`);
     this.setState({
       color: 'success',
@@ -91,7 +91,7 @@ class CommentIndex extends React.Component {
         return (
           <>
             <td>
-              <Link className="text-danger" to="#" onClick={() => this.handleRestorePicture(picture.id)}>
+              <Link className="text-danger" onClick={(e) => this.handleRestoreComment(e, picture.id)}>
                 Restore
               </Link>
             </td>
@@ -101,7 +101,7 @@ class CommentIndex extends React.Component {
         return (
           <>
             <td>
-              <Link className="text-danger" to="#" onClick={() => this.handleRemovePicture(picture.id)}>
+              <Link className="text-danger" onClick={() => this.handleRemoveComment(picture.id)}>
                 <img src={binIcon} alt="" className="nc-icon" />
               </Link>
             </td>
@@ -136,7 +136,10 @@ class CommentIndex extends React.Component {
                     <tr key={picture.id}>
                       <td>{picture.name}</td>
                       <td>
-                        <Link className="text-danger" to={`/admin/comments/${picture.id}`} onClick={() => this.handleRemovePicture(picture.id)}>
+                        <Link
+                          className="text-danger"
+                          to={`/admin/comments/${picture.id}`}
+                          onClick={(e) => this.handleRemoveComment(e, picture.id)}>
                           <img src={widgetIcon} alt="" />
                         </Link>
                       </td>

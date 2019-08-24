@@ -64,7 +64,8 @@ class PictureShow extends React.Component {
     const response = await api.get(`/pictures/${this.state.id}/comments`);
     this.setState({ comments: response.data });
   }
-  handleRemoveComment = async (id) => {
+  handleRemoveComment = async (e, id) => {
+    e.preventDefault();
     await api.delete(`/comments/${id}`);
     this.setState({
       color: 'success',
@@ -73,7 +74,8 @@ class PictureShow extends React.Component {
     });
     this.loadComments()
   }
-  handleRestoreComment = async (id) => {
+  handleRestoreComment = async (e, id) => {
+    e.preventDefault();
     await api.put(`/comments/${id}/restore`);
     this.setState({
       color: 'success',
@@ -87,13 +89,13 @@ class PictureShow extends React.Component {
     const commentActions = (comment) => {
       if (comment.deleted_at) {
         return (
-          <Link to="#" onClick={() => this.handleRestoreComment(comment.id)}>
+          <Link to="#" onClick={(e) => this.handleRestoreComment(e, comment.id)}>
             Restore
           </Link>
         )
       } else {
         return (
-          <Link to="#" onClick={() => this.handleRemoveComment(comment.id)}>
+          <Link to="#" onClick={(e) => this.handleRemoveComment(e, comment.id)}>
             <img src={binIcon} alt="" className="nc-icon" />
           </Link>
         )

@@ -14,6 +14,7 @@ import {
 } from "reactstrap";
 import api from "../../services/api";
 import { isAuthenticated } from "../../services/auth";
+import { Link } from "react-router-dom";
 
 class UserEdit extends React.Component {
   constructor(props) {
@@ -36,14 +37,14 @@ class UserEdit extends React.Component {
       }
       const { id } = this.props.match.params;
       const response = await api.get(`/users/${id}`);
-      const profile = response.data.Profile
+      const user = response.data;
+      const profile = user;
       
-      this.setState({ profile_id: id, profile });
+      this.setState({ user, profile });
     } catch (error) {
       console.log('====================================');
       console.log(error);
       console.log('====================================');
-      this.props.history.push('/admin/dashboard');
     }
 
   }
@@ -51,13 +52,12 @@ class UserEdit extends React.Component {
   handleUpdateProfile = async e => {
     e.preventDefault();
     const { profile } = this.state;
-    await api.put(`/profiles/${this.state.profile_id}`, { ...profile });
+    await api.put(`/profiles/${profile.id}`, { ...profile });
     
     this.setState({
       color: 'success',
       visible: true,
-      message:
-        "Profile save!"
+      message: "Profile save!"
     });
   }
   onDismiss = () => {
@@ -65,6 +65,9 @@ class UserEdit extends React.Component {
   }
 
   render() {
+    const { user } = this.state;
+    const { profile } = user;
+
     return (
       <>
         <div className="content">
@@ -88,9 +91,9 @@ class UserEdit extends React.Component {
                           <Input
                             placeholder="First Name"
                             type="text"
-                            defaultValue={this.state.profile.first_name}
+                            defaultValue={profile && profile.first_name}
                             onChange={e => {
-                              let newProfile = Object.assign({}, this.state.profile);
+                              let newProfile = Object.assign({}, profile);
                               newProfile.first_name = e.target.value;
                               this.setState({ profile: newProfile });
                             }}
@@ -103,9 +106,9 @@ class UserEdit extends React.Component {
                           <Input
                             placeholder="Last Name"
                             type="text"
-                            defaultValue={this.state.profile.last_name}
+                            defaultValue={profile && profile.last_name}
                             onChange={e => {
-                              let newProfile = Object.assign({}, this.state.profile);
+                              let newProfile = Object.assign({}, profile);
                               newProfile.last_name = e.target.value;
                               this.setState({ profile: newProfile });
                             }}
@@ -120,9 +123,9 @@ class UserEdit extends React.Component {
                           <Input
                             placeholder="Street"
                             type="text"
-                            defaultValue={this.state.profile.street}
+                            defaultValue={profile && profile.street}
                             onChange={e => {
-                              let newProfile = Object.assign({}, this.state.profile);
+                              let newProfile = Object.assign({}, profile);
                               newProfile.street = e.target.value;
                               this.setState({ profile: newProfile });
                             }}
@@ -135,9 +138,9 @@ class UserEdit extends React.Component {
                           <Input
                             placeholder="Number"
                             type="text"
-                            defaultValue={this.state.profile.number}
+                            defaultValue={profile && profile.number}
                             onChange={e => {
-                              let newProfile = Object.assign({}, this.state.profile);
+                              let newProfile = Object.assign({}, profile);
                               newProfile.number = e.target.value;
                               this.setState({ profile: newProfile });
                             }}
@@ -152,9 +155,9 @@ class UserEdit extends React.Component {
                           <Input
                             placeholder="City"
                             type="text"
-                            defaultValue={this.state.profile.city}
+                            defaultValue={profile && profile.city}
                             onChange={e => {
-                              let newProfile = Object.assign({}, this.state.profile);
+                              let newProfile = Object.assign({}, profile);
                               newProfile.city = e.target.value;
                               this.setState({ profile: newProfile });
                             }}
@@ -167,9 +170,9 @@ class UserEdit extends React.Component {
                           <Input
                             placeholder="Country"
                             type="text"
-                            defaultValue={this.state.profile.county}
+                            defaultValue={profile && profile.county}
                             onChange={e => {
-                              let newProfile = Object.assign({}, this.state.profile);
+                              let newProfile = Object.assign({}, profile);
                               newProfile.county = e.target.value;
                               this.setState({ profile: newProfile });
                             }}
@@ -182,9 +185,9 @@ class UserEdit extends React.Component {
                           <Input
                             placeholder="State"
                             type="text"
-                            defaultValue={this.state.profile.state}
+                            defaultValue={profile && profile.state}
                             onChange={e => {
-                              let newProfile = Object.assign({}, this.state.profile);
+                              let newProfile = Object.assign({}, profile);
                               newProfile.state = e.target.value;
                               this.setState({ profile: newProfile });
                             }}
@@ -197,9 +200,9 @@ class UserEdit extends React.Component {
                         <FormGroup>
                           <label>Phone</label>
                           <Input placeholder="Phone" type="text"
-                            defaultValue={this.state.profile.phone}
+                            defaultValue={profile && profile.phone}
                             onChange={e => {
-                              let newProfile = Object.assign({}, this.state.profile);
+                              let newProfile = Object.assign({}, profile);
                               newProfile.phone = e.target.value;
                               this.setState({ profile: newProfile });
                             }}
@@ -210,9 +213,9 @@ class UserEdit extends React.Component {
                         <FormGroup>
                           <label>Twitter</label>
                           <Input placeholder="Twitter" type="text"
-                            defaultValue={this.state.profile.twitter}
+                            defaultValue={profile && profile.twitter}
                             onChange={e => {
-                              let newProfile = Object.assign({}, this.state.profile);
+                              let newProfile = Object.assign({}, profile);
                               newProfile.twitter = e.target.value;
                               this.setState({ profile: newProfile });
                             }}
@@ -223,9 +226,9 @@ class UserEdit extends React.Component {
                         <FormGroup>
                           <label>Instagram</label>
                           <Input placeholder="Instagram" type="text"
-                            defaultValue={this.state.profile.instagram}
+                            defaultValue={profile && profile.instagram}
                             onChange={e => {
-                              let newProfile = Object.assign({}, this.state.profile);
+                              let newProfile = Object.assign({}, profile);
                               newProfile.instagram = e.target.value;
                               this.setState({ profile: newProfile });
                             }}
@@ -238,9 +241,9 @@ class UserEdit extends React.Component {
                         <FormGroup>
                           <label>Pinterest</label>
                           <Input placeholder="Pinterest" type="text"
-                            defaultValue={this.state.profile.pinterest}
+                            defaultValue={profile && profile.pinterest}
                             onChange={e => {
-                              let newProfile = Object.assign({}, this.state.profile);
+                              let newProfile = Object.assign({}, profile);
                               newProfile.pinterest = e.target.value;
                               this.setState({ profile: newProfile });
                             }}
@@ -251,9 +254,9 @@ class UserEdit extends React.Component {
                         <FormGroup>
                           <label>Linkedin</label>
                           <Input placeholder="Linkedin" type="text"
-                            defaultValue={this.state.profile.linkedin}
+                            defaultValue={profile && profile.linkedin}
                             onChange={e => {
-                              let newProfile = Object.assign({}, this.state.profile);
+                              let newProfile = Object.assign({}, profile);
                               newProfile.linkedin = e.target.value;
                               this.setState({ profile: newProfile });
                             }}
@@ -264,9 +267,9 @@ class UserEdit extends React.Component {
                         <FormGroup>
                           <label>Facebook</label>
                           <Input placeholder="Facebook" type="text"
-                            defaultValue={this.state.facebook}
+                            defaultValue={profile && profile.facebook}
                             onChange={e => {
-                              let newProfile = Object.assign({}, this.state.profile);
+                              let newProfile = Object.assign({}, profile);
                               newProfile.facebook = e.target.value;
                               this.setState({ profile: newProfile });
                             }}
@@ -283,6 +286,7 @@ class UserEdit extends React.Component {
                         >
                           Update Profile
                         </Button>
+                        <Link to="/admin/dashboard">Go back</Link>
                       </div>
                     </Row>
                   </Form>
