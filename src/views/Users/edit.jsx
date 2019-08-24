@@ -12,20 +12,28 @@ import {
   Col,
   Alert
 } from "reactstrap";
-import api from "../services/api";
+import api from "../../services/api";
+import { isAuthenticated } from "../../services/auth";
 
-class User extends React.Component {
-  state = {
-    profile_id: '',
-    user: {},
-    profile: {},
-    message: '',
-    visible: false,
-    color: ''
+class UserEdit extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      profile_id: '',
+      user: {},
+      profile: {},
+      message: '',
+      visible: false,
+      color: ''
+    }
   }
 
   async componentDidMount() {
     try {
+      if (!isAuthenticated()) {
+        return this.props.history.push('/signin');
+      }
       const { id } = this.props.match.params;
       const response = await api.get(`/users/${id}`);
       const profile = response.data.Profile
@@ -288,4 +296,4 @@ class User extends React.Component {
   }
 }
 
-export default User;
+export default UserEdit;

@@ -1,5 +1,7 @@
 import Dashboard from "views/Dashboard.jsx";
-import UserPage from "views/User.jsx";
+import UserEdit from "views/Users/edit.jsx";
+import PictureShow from "views/Pictures/show.jsx";
+import CommentEdit from "views/Comments/edit.jsx";
 import SignOut from "views/SignOut.jsx";
 // import Notifications from "views/Notifications.jsx";
 // import Icons from "views/Icons.jsx";
@@ -17,10 +19,26 @@ var routes = [
     layout: "/admin"
   },
   {
-    path: "/user-page/:id",
-    name: "User Profile",
+    path: "/users/:id",
+    name: "Show Profile",
     icon: "nc-icon nc-single-02",
-    component: UserPage,
+    component: UserEdit,
+    layout: "/admin",
+    hidden: true
+  },
+  {
+    path: "/pictures/:id",
+    name: "Show Picture",
+    icon: "nc-icon nc-single-02",
+    component: PictureShow,
+    layout: "/admin",
+    hidden: true
+  },
+  {
+    path: "/comments/:id/edit",
+    name: "Edit Comment",
+    icon: "nc-icon nc-single-02",
+    component: CommentEdit,
     layout: "/admin",
     hidden: true
   },

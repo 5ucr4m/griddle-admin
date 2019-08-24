@@ -205,3 +205,13 @@
   outline: none;
   display: none;
 }
+
+.card-footer a {
+  margin-right:15px;
+}
+
+.card-title.user-info {
+  display: flex !important;
+  align-items: baseline;
+  justify-content: center;
+}
