@@ -37,7 +37,7 @@ class SignIn extends React.Component {
       });
     } else {
       try {
-        const response = await api.post("/users/signin", { email, password });
+        const response = await api.post("/users/signin/admin", { email, password });
         login(response.data.token);
         this.setState({ logged: true });
         this.renderRedirect();
