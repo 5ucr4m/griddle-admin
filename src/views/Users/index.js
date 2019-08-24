@@ -147,7 +147,11 @@ class UserList extends React.Component {
                       <td>{user.profile && user.profile.first_name}</td>
                       <td>{user.profile && user.profile.last_name}</td>
                       <td>{user.email}</td>
-                      <td><Moment>{user.createdAt}</Moment></td>
+                      <td>
+                        <Moment format="MM/DD/YYYY HH:mm A">
+                          {user.createdAt}
+                        </Moment>
+                      </td>
                       <td>
                         <CustomInput
                           defaultChecked={user.admin}

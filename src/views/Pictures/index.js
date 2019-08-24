@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import api from "../../services/api";
 import { isAuthenticated } from "../../services/auth";
 import binIcon from '../../assets/img/icons/bin.svg';
+import Moment from 'react-moment';
 
 class PictureList extends React.Component {
   constructor(props) {
@@ -129,6 +130,7 @@ class PictureList extends React.Component {
                 <thead className="text-primary">
                   <tr>
                     <th>Name</th>
+                    <th>Created at</th>
                     <th>Links</th>
                     <th>Actions</th>
                   </tr>
@@ -136,8 +138,11 @@ class PictureList extends React.Component {
                 <tbody>
                   {pictures.map(picture => (
                     <tr key={picture.id}>
+                      <td>{picture.name}</td>
                       <td>
-                        {picture.name}
+                        <Moment format="MM/DD/YYYY HH:mm A">
+                          {picture.createdAt}
+                        </Moment>
                       </td>
                       <td>
                         <Link className="text-info" to={`/admin/pictures/${picture.id}`} >

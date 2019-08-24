@@ -131,7 +131,9 @@ class PictureShow extends React.Component {
                     <h3 className="text-success">{comment.user && comment.user.email}</h3>
                   </CardTitle>
                   <CardText>
-                    {comment.description} - <span className="description"><Moment toNow>{comment.createdAt}</Moment></span>
+                    {comment.description} - <span className="description">
+                      <Moment format="MM/DD/YYYY HH:mm A">{comment.createdAt}</Moment>
+                    </span>
                   </CardText>
                 </CardBody>
                 <CardFooter>
