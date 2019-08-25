@@ -75,7 +75,7 @@ class UserEdit extends React.Component {
             <Col md="12">
               <Card className="card-user">
                 <CardHeader>
-                  <CardTitle tag="h5">Edit Profile</CardTitle>
+                  <CardTitle tag="h5">Editing Profile</CardTitle>
                 </CardHeader>
                 <CardBody>
                   {this.state.message && (

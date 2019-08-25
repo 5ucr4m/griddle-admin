@@ -17,12 +17,12 @@ import nCheck from '../../assets/img/icons/n-check.svg';
 import pencilIcon from '../../assets/img/icons/pencil.svg';
 import Moment from 'react-moment';
 
-class CommentIndex extends React.Component {
+class OpinionIndex extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      comments: [],
+      opinions: [],
       visible: false,
       color: '',
       message: '',
@@ -35,7 +35,7 @@ class CommentIndex extends React.Component {
       if (!isAuthenticated()) {
         return this.props.history.push('/signin');
       }
-      this.loadComments();
+      this.loadOpinions();
     } catch (error) {
       console.log('====================================');
       console.log(error);
@@ -48,16 +48,16 @@ class CommentIndex extends React.Component {
     }
   }
 
-  loadComments = async () => {
+  loadOpinions = async () => {
     try {
       const { picture_id } = this.props;
       let response;
       if (picture_id) {
-        response = await api.get(`/pictures/${picture_id}/comments`);
+        response = await api.get(`/pictures/${picture_id}/opinions`);
       } else {
-        response = await api.get("/comments")
+        response = await api.get("/opinions")
       }
-      this.setState({ comments: response.data });
+      this.setState({ opinions: response.data });
     } catch (error) {
       console.log('====================================');
       console.log(error);
@@ -65,28 +65,28 @@ class CommentIndex extends React.Component {
     }
   }
 
-  handleRemoveComment = async (e, id) => {
+  handleRemoveOpinion = async (e, id) => {
     e.preventDefault();
-    await api.delete(`/comments/${id}`);
+    await api.delete(`/opinions/${id}`);
     this.setState({
       color: 'success',
       visible: true,
       message: "Comment deleted!"
     });
     
-    this.loadComments()
+    this.loadOpinions();
   }
 
-  handleRestoreComment = async (e, id) => {
+  handleRestoreOpinion = async (e, id) => {
     e.preventDefault();
-    await api.put(`/comments/${id}/restore`);
+    await api.put(`/opinions/${id}/restore`);
     this.setState({
       color: 'success',
       visible: true,
       message: "Comment restored!"
     });
 
-    this.loadComments()
+    this.loadOpinions();
   }
 
   onDismiss = () => {
@@ -94,18 +94,18 @@ class CommentIndex extends React.Component {
   }
 
   handleAdmin = async (id) => {
-    await api.put(`/comments/${id}/toggle-admin`);
+    await api.put(`/opinions/${id}/toggle-admin`);
   }
 
   render() {
-    const { comments } = this.state;
-    const commentActions = comment => {
-      if (comment.deleted_at) {
+    const { opinions } = this.state;
+    const opinionActions = opinion => {
+      if (opinion.deleted_at) {
         return (
           <>
             <td>
-              <Link to="#" className="text-danger" onClick={e => this.handleRestoreComment(e, comment.id)}>
-                <img id={comment.id} src={nCheck} alt="" className="nc-icon" />
+              <Link to="#" className="text-danger" onClick={e => this.handleRestoreOpinion(e, opinion.id)}>
+                <img id={opinion.id} src={nCheck} alt="" className="nc-icon" />
               </Link>
             </td>
           </>
@@ -114,7 +114,7 @@ class CommentIndex extends React.Component {
         return (
           <>
             <td>
-              <Link to="#" className="text-danger" onClick={e => this.handleRemoveComment(e, comment.id)}>
+              <Link to="#" className="text-danger" onClick={e => this.handleRemoveOpinion(e, opinion.id)}>
                 <img src={binIcon} alt="" className="nc-icon" />
               </Link>
             </td>
@@ -124,12 +124,13 @@ class CommentIndex extends React.Component {
     }
 
     return (
+      <div className="content">
       <Row>
         <Col md="12">
           <Card>
             <CardHeader>
-              <CardTitle tag="h5">Comments</CardTitle>
-              <p className="card-category">Listing comments</p>
+              <CardTitle tag="h5">Feedback</CardTitle>
+              <p className="card-category">Listing opinions</p>
             </CardHeader>
             <CardBody>
               {this.state.message && (
@@ -145,17 +146,17 @@ class CommentIndex extends React.Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {comments.map(comment => (
-                    <tr key={comment.id} style={{ background: (comment.deleted_at ? '#ffeaea' : '') }}>
+                  {opinions.map(opinion => (
+                    <tr key={opinion.id} style={{ background: (opinion.deleted_at ? '#ffeaea' : '') }}>
                       <td>
-                        {comment.description} - <Moment format="MM/DD/YYYY HH:MM A" className="description">{comment.createdAt}</Moment>
+                        {opinion.description} - <Moment format="MM/DD/YYYY HH:MM A" className="description">{opinion.createdAt}</Moment>
                       </td>
                       <td>
-                        <Link to={`/admin/comments/${comment.id}/edit`} className="text-warning">
-                          <img id={comment.id} src={pencilIcon} alt="" className="nc-icon" />
+                        <Link to={`/admin/opinions/${opinion.id}/edit`} className="text-warning">
+                          <img id={opinion.id} src={pencilIcon} alt="" className="nc-icon" />
                         </Link>
                       </td>
-                      {commentActions(comment)}
+                      {opinionActions(opinion)}
                     </tr>
                   ))}
                 </tbody>
@@ -164,8 +165,9 @@ class CommentIndex extends React.Component {
           </Card>
         </Col>
       </Row>
+      </div>
     )
   }
 }
 
-export default CommentIndex;
+export default OpinionIndex;

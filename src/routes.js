@@ -1,4 +1,6 @@
 import Dashboard from "views/Dashboard.jsx";
+import OpinionIndex from "views/Opinions";
+import OpinionEdit from "views/Opinions/edit.jsx";
 import UserEdit from "views/Users/edit.jsx";
 import PictureShow from "views/Pictures/show.jsx";
 import CommentEdit from "views/Comments/edit.jsx";
@@ -16,6 +18,21 @@ var routes = [
     name: "Dashboard",
     icon: "nc-icon nc-bank",
     component: Dashboard,
+    layout: "/admin"
+  },
+  {
+    path: "/opinions/:id/edit",
+    name: "List Opinions",
+    icon: "nc-icon nc-bulb-63",
+    component: OpinionEdit,
+    layout: "/admin",
+    hidden: true
+  },
+  {
+    path: "/opinions",
+    name: "List Opinions",
+    icon: "nc-icon nc-bulb-63",
+    component: OpinionIndex,
     layout: "/admin"
   },
   {

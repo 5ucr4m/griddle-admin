@@ -75,8 +75,7 @@ class VoteIndex extends React.Component {
       message: "Vote deleted!"
     });
     
-    const { picture_id } = this.props;
-    this.loadVotes(picture_id)
+    this.loadVotes()
   }
 
   handleRestoreVote = async (e, id) => {
@@ -88,8 +87,7 @@ class VoteIndex extends React.Component {
       message: "Vote restored!"
     });
 
-    const { picture_id } = this.props;
-    this.loadVotes(picture_id)
+    this.loadVotes()
   }
 
   onDismiss = () => {

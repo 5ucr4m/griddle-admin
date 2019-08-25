@@ -17,12 +17,11 @@ import api from "../../services/api";
 import { isAuthenticated } from "../../services/auth";
 import { Link } from "react-router-dom";
 
-class CommentEdit extends React.Component {
+class OpinionEdit extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      profile_id: '',
       description: {},
       message: '',
       visible: false,
@@ -36,10 +35,10 @@ class CommentEdit extends React.Component {
         return this.props.history.push('/signin');
       }
       const { id } = this.props.match.params;
-      const response = await api.get(`/comments/${id}`);
-      const comment = response.data
+      const response = await api.get(`/opinions/${id}`);
+      const opinion = response.data
       
-      this.setState({ comment, id });
+      this.setState({ opinion, id });
     } catch (error) {
       console.log('====================================');
       console.log(error);
@@ -48,23 +47,24 @@ class CommentEdit extends React.Component {
 
   }
   
-  handleUpdateComment = async e => {
+  handleUpdateOpinion = async e => {
     e.preventDefault();
-    const { comment } = this.state;
-    await api.put(`/comments/${this.state.id}`, { ...comment });
+    const { opinion } = this.state;
+    await api.put(`/opinions/${this.state.id}`, { ...opinion });
     
     this.setState({
       color: 'success',
       visible: true,
-      message: "Comment save!"
+      message: "Opinion save!"
     });
   }
+  
   onDismiss = () => {
     this.setState({ visible: !this.state.visible });
   }
 
   render() {
-    const { comment } = this.state;
+    const { opinion } = this.state;
     
     return (
       <>
@@ -73,7 +73,7 @@ class CommentEdit extends React.Component {
             <Col md="12">
               <Card className="card-user">
                 <CardHeader>
-                  <CardTitle tag="h5">Editing comment</CardTitle>
+                  <CardTitle tag="h5">Editing opinion</CardTitle>
                 </CardHeader>
                 <CardBody>
                   {this.state.message && (
@@ -81,7 +81,7 @@ class CommentEdit extends React.Component {
                       {this.state.message}
                     </Alert>
                   )}
-                  <Form onSubmit={this.handleUpdateComment}>
+                  <Form onSubmit={this.handleUpdateOpinion}>
                     <Row>
                       <Col>
                         <FormGroup>
@@ -89,11 +89,11 @@ class CommentEdit extends React.Component {
                           <Input
                             placeholder="Description"
                             type="textarea"
-                            value={comment && comment.description}
+                            value={opinion && opinion.description}
                             onChange={e => {
-                              let newComment = Object.assign({}, comment);
-                              newComment.description = e.target.value;
-                              this.setState({ comment: newComment });
+                              let newOpinion = Object.assign({}, opinion);
+                              newOpinion.description = e.target.value;
+                              this.setState({ opinion: newOpinion });
                             }}
                           />
                         </FormGroup>
@@ -106,9 +106,9 @@ class CommentEdit extends React.Component {
                           color="primary"
                           type="submit"
                         >
-                          Update comment
+                          Update opinion
                         </Button>
-                        <Link to={`/admin/pictures/${comment && comment.picture_id}`}>Go back</Link>
+                        <Link to={'/admin/opinions'}>Go back</Link>
                       </div>
                     </Row>
                   </Form>
@@ -122,4 +122,4 @@ class CommentEdit extends React.Component {
   }
 }
 
-export default CommentEdit;
+export default OpinionEdit;
