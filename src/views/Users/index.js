@@ -15,6 +15,7 @@ import api from "../../services/api";
 import { isAuthenticated } from "../../services/auth";
 import pencilIcon from '../../assets/img/icons/pencil.svg';
 import binIcon from '../../assets/img/icons/bin.svg';
+import nCheck from '../../assets/img/icons/n-check.svg';
 import Moment from 'react-moment';
 
 class UserList extends React.Component {
@@ -99,7 +100,7 @@ class UserList extends React.Component {
           <>
             <td>
               <Link className="text-danger" to="#" onClick={(e) => this.handleRestoreUser(e, user.id)}>
-                Restore
+                <img src={nCheck} alt="" className="nc-icon" />
               </Link>
             </td>
           </>
@@ -143,7 +144,7 @@ class UserList extends React.Component {
                 </thead>
                 <tbody>
                   {users.map(user => (
-                    <tr key={user.id}>
+                    <tr key={user.id} style={{ background: (user.deleted_at ? '#ffeaea' : '') }}>
                       <td>{user.profile && user.profile.first_name}</td>
                       <td>{user.profile && user.profile.last_name}</td>
                       <td>{user.email}</td>

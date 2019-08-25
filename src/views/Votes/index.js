@@ -16,23 +16,26 @@ import binIcon from '../../assets/img/icons/bin.svg';
 import nCheck from '../../assets/img/icons/n-check.svg';
 import Moment from 'react-moment';
 
-class PictureList extends React.Component {
+class VoteIndex extends React.Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
-      pictures: [],
+      votes: [],
       visible: false,
       color: '',
       message: '',
+      picture_id: null
     }
   }
+
   componentDidMount() {
     try {
       if (!isAuthenticated()) {
         return this.props.history.push('/signin');
       }
-      this.loadPictures();
+      const { picture_id } = this.props;
+      this.loadVotes(picture_id);
     } catch (error) {
       console.log('====================================');
       console.log(error);
@@ -40,16 +43,21 @@ class PictureList extends React.Component {
       this.setState({
         color: 'danger',
         visible: true,
-        message:
-          "Error"
+        message: 'Error'
       });
     }
   }
 
-  loadPictures = async () => {
+  loadVotes = async () => {
     try {
-      const response = await api.get("/pictures");
-      this.setState({ pictures: response.data });
+      const { picture_id } = this.props;
+      let response;
+      if (picture_id) {
+        response = await api.get(`/pictures/${picture_id}/votes`);
+      } else {
+        response = await api.get("/votes")
+      }
+      this.setState({ votes: response.data });
     } catch (error) {
       console.log('====================================');
       console.log(error);
@@ -57,26 +65,31 @@ class PictureList extends React.Component {
     }
   }
 
-  handleRemovePicture = async (e, id) => {
+  handleRemoveVote = async (e, id) => {
     e.preventDefault();
-    await api.delete(`/pictures/${id}`);
+    
+    await api.delete(`/votes/${id}`);
     this.setState({
       color: 'success',
       visible: true,
-      message: "Picture deleted!"
+      message: "Vote deleted!"
     });
-    this.loadPictures()
+    
+    const { picture_id } = this.props;
+    this.loadVotes(picture_id)
   }
 
-  handleRestorePicture = async (e, id) => {
+  handleRestoreVote = async (e, id) => {
     e.preventDefault();
-    await api.put(`/pictures/${id}/restore`);
+    await api.put(`/votes/${id}/restore`);
     this.setState({
       color: 'success',
       visible: true,
-      message: "Picture restored!"
+      message: "Vote restored!"
     });
-    this.loadPictures();
+
+    const { picture_id } = this.props;
+    this.loadVotes(picture_id)
   }
 
   onDismiss = () => {
@@ -84,18 +97,18 @@ class PictureList extends React.Component {
   }
 
   handleAdmin = async (id) => {
-    await api.put(`/pictures/${id}/toggle-admin`);
+    await api.put(`/votes/${id}/toggle-admin`);
   }
-  
+
   render() {
-    const { pictures } = this.state;
-    const pictureActions = (picture) => {
-      if (picture.deleted_at) {
+    const { votes } = this.state;
+    const voteActions = vote => {
+      if (vote.deleted_at) {
         return (
           <>
-            <td>
-              <Link className="text-danger" to="#" onClick={(e) => this.handleRestorePicture(e, picture.id)}>
-                <img src={nCheck} alt="" className="nc-icon" />
+            <td className="text-center">
+              <Link to="#" onClick={e => this.handleRestoreVote(e, vote.id)}>
+                <img id={vote.id} src={nCheck} alt="" className="nc-icon" />
               </Link>
             </td>
           </>
@@ -103,8 +116,8 @@ class PictureList extends React.Component {
       } else {
         return (
           <>
-            <td>
-              <Link className="text-danger" to="#" onClick={(e) => this.handleRemovePicture(e, picture.id)}>
+            <td className="text-center">
+              <Link to="#" onClick={e => this.handleRemoveVote(e, vote.id)}>
                 <img src={binIcon} alt="" className="nc-icon" />
               </Link>
             </td>
@@ -118,8 +131,8 @@ class PictureList extends React.Component {
         <Col md="12">
           <Card>
             <CardHeader>
-              <CardTitle tag="h5">Pictures</CardTitle>
-              <p className="card-category">List pictures</p>
+              <CardTitle tag="h5">Votes</CardTitle>
+              <p className="card-category">Listing votes</p>
             </CardHeader>
             <CardBody>
               {this.state.message && (
@@ -130,32 +143,19 @@ class PictureList extends React.Component {
               <Table responsive>
                 <thead className="text-primary">
                   <tr>
-                    <th>Name</th>
-                    <th>Created at</th>
-                    <th>Links</th>
-                    <th>Actions</th>
+                    <th>User</th>
+                    <th></th>
+                    <th colSpan="3">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {pictures.map(picture => (
-                    <tr key={picture.id} style={{ background: (picture.deleted_at ? '#ffeaea' : '') }}>
-                      <td>{picture.name}</td>
+                  {votes.map(vote => (
+                    <tr key={vote.id} style={{ background: (vote.deleted_at ? '#ffeaea' : '') }}>
+                      <td>{vote.user && vote.user.profile && vote.user.profile.first_name}</td>
                       <td>
-                        <Moment format="MM/DD/YYYY HH:mm A">
-                          {picture.createdAt}
-                        </Moment>
+                        {vote.kind} - <Moment format="MM/DD/YYYY HH:MM A" className="description">{vote.createdAt}</Moment>
                       </td>
-                      <td>
-                        <Link className="text-info" to={`/admin/pictures/${picture.id}`} >
-                          Comments
-                          </Link>
-                      </td>
-                      {/* <td>
-                        <Link className="text-info" to={`/admin/pictures/${picture.id}`} onClick={() => this.handleRemovePicture(picture.id)}>
-                          Votes
-                        </Link>
-                      </td> */}
-                      {pictureActions(picture)}
+                      {voteActions(vote)}
                     </tr>
                   ))}
                 </tbody>
@@ -168,4 +168,4 @@ class PictureList extends React.Component {
   }
 }
 
-export default PictureList;
+export default VoteIndex;

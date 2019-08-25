@@ -4,20 +4,16 @@ import {
   Col,
   Card,
   CardHeader,
-  CardTitle,
   CardBody,
   CardImg,
-  CardText,
-  CardFooter,
   Alert,
 } from "reactstrap";
-import Moment from 'react-moment';
 import { isAuthenticated } from "../../services/auth";
 import api from "../../services/api";
 import road from '../../assets/img/road.jpg'
 import { Link } from "react-router-dom";
-import binIcon from '../../assets/img/icons/bin.svg';
-import pencilIcon from '../../assets/img/icons/pencil.svg';
+import CommentIndex from '../Comments';
+import VoteIndex from '../Votes';
 
 class PictureShow extends React.Component {
   constructor(props) {
@@ -85,27 +81,12 @@ class PictureShow extends React.Component {
     this.loadComments();
   }
   render() {
-    const { comments, picture } = this.state;
-    const commentActions = (comment) => {
-      if (comment.deleted_at) {
-        return (
-          <Link to="#" onClick={(e) => this.handleRestoreComment(e, comment.id)}>
-            Restore
-          </Link>
-        )
-      } else {
-        return (
-          <Link to="#" onClick={(e) => this.handleRemoveComment(e, comment.id)}>
-            <img src={binIcon} alt="" className="nc-icon" />
-          </Link>
-        )
-      }
-    }
+    const { picture, id } = this.state;
     
     return (
       <div className="content">
         <Row>
-          <Col md="12">
+          <Col md="4">
             <Card>
               {this.state.message && (
                 <Alert color={this.state.color} isOpen={this.state.visible} toggle={this.onDismiss}>
@@ -120,30 +101,14 @@ class PictureShow extends React.Component {
               </CardBody>
             </Card>
           </Col>
+          <Col md="8">
+            {id && <VoteIndex picture_id={id} />}
+          </Col>
         </Row>
         <h2>Comments</h2>
         <Row>
           <Col md="12">
-            {comments.map(comment => (
-              <Card key={comment.id}>
-                <CardBody>
-                  <CardTitle className="user-info">
-                    <h3 className="text-success">{comment.user && comment.user.email}</h3>
-                  </CardTitle>
-                  <CardText>
-                    {comment.description} - <span className="description">
-                      <Moment format="MM/DD/YYYY HH:mm A">{comment.createdAt}</Moment>
-                    </span>
-                  </CardText>
-                </CardBody>
-                <CardFooter>
-                  <Link to={`/admin/comments/${comment.id}/edit`} className="text-warning">
-                    <img id={comment.id} src={pencilIcon} alt="" className="nc-icon" />
-                  </Link>
-                  {commentActions(comment)}
-                </CardFooter>
-              </Card>
-            ))}
+            {id && <CommentIndex picture_id={id} />}
             <Link to='/admin/dashboard'>Go back</Link>
           </Col>
         </Row>
