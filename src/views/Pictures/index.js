@@ -14,6 +14,7 @@ import api from "../../services/api";
 import { isAuthenticated } from "../../services/auth";
 import binIcon from '../../assets/img/icons/bin.svg';
 import nCheck from '../../assets/img/icons/n-check.svg';
+import bChat from '../../assets/img/icons/b-chat.svg';
 import Moment from 'react-moment';
 
 class PictureList extends React.Component {
@@ -132,8 +133,7 @@ class PictureList extends React.Component {
                   <tr>
                     <th>Name</th>
                     <th>Created at</th>
-                    <th>Links</th>
-                    <th>Actions</th>
+                    <th colSpan="2">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -147,14 +147,9 @@ class PictureList extends React.Component {
                       </td>
                       <td>
                         <Link className="text-info" to={`/admin/pictures/${picture.id}`} >
-                          Comments
-                          </Link>
-                      </td>
-                      {/* <td>
-                        <Link className="text-info" to={`/admin/pictures/${picture.id}`} onClick={() => this.handleRemovePicture(picture.id)}>
-                          Votes
+                          <img src={bChat} alt="" className="nc-icon" />
                         </Link>
-                      </td> */}
+                      </td>
                       {pictureActions(picture)}
                     </tr>
                   ))}
