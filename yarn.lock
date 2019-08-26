@@ -8369,6 +8369,13 @@ react-notification-alert@0.0.12:
   resolved "https://registry.yarnpkg.com/react-notification-alert/-/react-notification-alert-0.0.12.tgz#d05775ed9de42eb80bb41f66e3771906719bcdb2"
   integrity sha512-6GBpWe45zWEflV8c98l82HRl67iku2ARJ2FTbJh5kWiU/NyNb71l7CPKifkmDAdipDj0mouTxw8/3sRSVOMdvQ==
 
+react-paginate@^6.3.0:
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/react-paginate/-/react-paginate-6.3.0.tgz#29cbb5d1645227f4e4f959b9d7f43cfae603f801"
+  integrity sha512-lT/ne7hZzctGDli4QzUAou0JjfZgxKmtl9/r30B5UVonICZIy1u0SrAkdlEZ5ubgzrOykBeCmxkTWi5IyPg4AQ==
+  dependencies:
+    prop-types "^15.6.1"
+
 react-popper@^1.3.3:
   version "1.3.4"
   resolved "https://registry.yarnpkg.com/react-popper/-/react-popper-1.3.4.tgz#f0cd3b0d30378e1f663b0d79bcc8614221652ced"

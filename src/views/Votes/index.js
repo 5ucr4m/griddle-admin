@@ -8,6 +8,7 @@ import {
   CardBody,
   Table,
   Alert,
+  CardFooter
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import api from "../../services/api";
@@ -15,6 +16,7 @@ import { isAuthenticated } from "../../services/auth";
 import binIcon from '../../assets/img/icons/bin.svg';
 import nCheck from '../../assets/img/icons/n-check.svg';
 import Moment from 'react-moment';
+import ReactPaginate from 'react-paginate';
 
 class VoteIndex extends React.Component {
   constructor(props) {
@@ -25,7 +27,10 @@ class VoteIndex extends React.Component {
       visible: false,
       color: '',
       message: '',
-      picture_id: null
+      picture_id: null,
+      perPage: 10,
+      page: 1,
+      total: 0
     }
   }
 
@@ -53,11 +58,17 @@ class VoteIndex extends React.Component {
       const { picture_id } = this.props;
       let response;
       if (picture_id) {
-        response = await api.get(`/pictures/${picture_id}/votes`);
+        response = await api.get(
+          `/pictures/${picture_id}/votes?page=${this.state.page}&paginate=${this.state.perPage}`
+        );
       } else {
-        response = await api.get("/votes")
+        response = await api.get(
+          `/votes?page=${this.state.page}&paginate=${this.state.perPage}`
+        )
       }
-      this.setState({ votes: response.data });
+      
+      const { pages, total, docs } = response.data;
+      this.setState({ votes: docs, pages, total });
     } catch (error) {
       console.log('====================================');
       console.log(error);
@@ -97,6 +108,14 @@ class VoteIndex extends React.Component {
   handleAdmin = async (id) => {
     await api.put(`/votes/${id}/toggle-admin`);
   }
+
+  handlePageClick = async data => {
+    const { selected } = data;
+    let page = selected + 1;
+    await this.setState({ page }, () => {
+      this.loadVotes();
+    });
+  };
 
   render() {
     const { votes } = this.state;
@@ -159,6 +178,26 @@ class VoteIndex extends React.Component {
                 </tbody>
               </Table>
             </CardBody>
+            <CardFooter>
+              <ReactPaginate
+                previousLabel={'previous'}
+                nextLabel={'next'}
+                breakLabel={'...'}
+                pageCount={this.state.pages}
+                marginPagesDisplayed={2}
+                pageRangeDisplayed={this.state.total}
+                onPageChange={this.handlePageClick}
+                breakClassName={'break-me'}
+                containerClassName={'pagination'}
+                subContainerClassName={'pages pagination'}
+                activeClassName={'page-item active'}
+                previousClassName="page-item"
+                nextClassName="page-item"
+                previousLinkClassName="page-link"
+                nextLinkClassName="page-link"
+                pageLinkClassName="page-link"
+              />
+            </CardFooter>
           </Card>
         </Col>
       </Row>

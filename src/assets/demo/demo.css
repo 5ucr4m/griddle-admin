@@ -215,3 +215,7 @@
   align-items: baseline;
   justify-content: center;
 }
+
+.page-link {
+  cursor: pointer;
+}

@@ -8,6 +8,7 @@ import {
   CardBody,
   Table,
   Alert,
+  CardFooter
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import api from "../../services/api";
@@ -16,6 +17,7 @@ import binIcon from '../../assets/img/icons/bin.svg';
 import nCheck from '../../assets/img/icons/n-check.svg';
 import pencilIcon from '../../assets/img/icons/pencil.svg';
 import Moment from 'react-moment';
+import ReactPaginate from 'react-paginate';
 
 class CommentIndex extends React.Component {
   constructor(props) {
@@ -26,7 +28,10 @@ class CommentIndex extends React.Component {
       visible: false,
       color: '',
       message: '',
-      picture_id: null
+      picture_id: null,
+      perPage: 10,
+      page: 1,
+      total: 0
     }
   }
 
@@ -51,13 +56,20 @@ class CommentIndex extends React.Component {
   loadComments = async () => {
     try {
       const { picture_id } = this.props;
+      
       let response;
       if (picture_id) {
-        response = await api.get(`/pictures/${picture_id}/comments`);
+        response = await api.get(
+          `/pictures/${picture_id}/comments?page=${this.state.page}&paginate=${this.state.perPage}`
+        );
       } else {
-        response = await api.get("/comments")
+        response = await api.get(
+          `/comments?page=${this.state.page}&paginate=${this.state.perPage}`
+        )
       }
-      this.setState({ comments: response.data });
+      
+      const { pages, total, docs } = response.data;
+      this.setState({ comments: docs, pages, total });
     } catch (error) {
       console.log('====================================');
       console.log(error);
@@ -96,6 +108,14 @@ class CommentIndex extends React.Component {
   handleAdmin = async (id) => {
     await api.put(`/comments/${id}/toggle-admin`);
   }
+
+  handlePageClick = async data => {
+    const { selected } = data;
+    let page = selected + 1;
+    await this.setState({ page }, () => {
+      this.loadComments();
+    });
+  };
 
   render() {
     const { comments } = this.state;
@@ -161,6 +181,26 @@ class CommentIndex extends React.Component {
                 </tbody>
               </Table>
             </CardBody>
+            <CardFooter>
+              <ReactPaginate
+                previousLabel={'previous'}
+                nextLabel={'next'}
+                breakLabel={'...'}
+                pageCount={this.state.pages}
+                marginPagesDisplayed={2}
+                pageRangeDisplayed={this.state.total}
+                onPageChange={this.handlePageClick}
+                breakClassName={'break-me'}
+                containerClassName={'pagination'}
+                subContainerClassName={'pages pagination'}
+                activeClassName={'page-item active'}
+                previousClassName="page-item"
+                nextClassName="page-item"
+                previousLinkClassName="page-link"
+                nextLinkClassName="page-link"
+                pageLinkClassName="page-link"
+              />
+            </CardFooter>
           </Card>
         </Col>
       </Row>

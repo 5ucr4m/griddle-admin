@@ -8,6 +8,7 @@ import {
   CardBody,
   Table,
   Alert,
+  CardFooter
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import api from "../../services/api";
@@ -16,6 +17,7 @@ import binIcon from '../../assets/img/icons/bin.svg';
 import nCheck from '../../assets/img/icons/n-check.svg';
 import bChat from '../../assets/img/icons/b-chat.svg';
 import Moment from 'react-moment';
+import ReactPaginate from 'react-paginate';
 
 class PictureList extends React.Component {
   constructor(props) {
@@ -26,6 +28,9 @@ class PictureList extends React.Component {
       visible: false,
       color: '',
       message: '',
+      perPage: 10,
+      page: 1,
+      total: 0
     }
   }
   componentDidMount() {
@@ -49,8 +54,11 @@ class PictureList extends React.Component {
 
   loadPictures = async () => {
     try {
-      const response = await api.get("/pictures");
-      this.setState({ pictures: response.data });
+      const response = await api.get(
+        `/pictures?page=${this.state.page}&paginate=${this.state.perPage}`
+      );
+      const { pages, total, docs } = response.data;
+      this.setState({ pictures: docs, pages, total });
     } catch (error) {
       console.log('====================================');
       console.log(error);
@@ -87,6 +95,14 @@ class PictureList extends React.Component {
   handleAdmin = async (id) => {
     await api.put(`/pictures/${id}/toggle-admin`);
   }
+
+  handlePageClick = async data => {
+    const { selected } = data;
+    let page = selected + 1;
+    await this.setState({ page }, () => {
+      this.loadPictures();
+    });
+  };
   
   render() {
     const { pictures } = this.state;
@@ -156,6 +172,26 @@ class PictureList extends React.Component {
                 </tbody>
               </Table>
             </CardBody>
+            <CardFooter>
+              <ReactPaginate
+                previousLabel={'previous'}
+                nextLabel={'next'}
+                breakLabel={'...'}
+                pageCount={this.state.pages}
+                marginPagesDisplayed={2}
+                pageRangeDisplayed={this.state.total}
+                onPageChange={this.handlePageClick}
+                breakClassName={'break-me'}
+                containerClassName={'pagination'}
+                subContainerClassName={'pages pagination'}
+                activeClassName={'page-item active'}
+                previousClassName="page-item"
+                nextClassName="page-item"
+                previousLinkClassName="page-link"
+                nextLinkClassName="page-link"
+                pageLinkClassName="page-link"
+              />
+            </CardFooter>
           </Card>
         </Col>
       </Row>
