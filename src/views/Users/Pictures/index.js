@@ -10,19 +10,19 @@ import {
   Alert,
   CardFooter
 } from "reactstrap";
+import { isAuthenticated } from "../../../services/auth";
+import api from "../../../services/api";
 import { Link } from "react-router-dom";
-import api from "../../services/api";
-import { isAuthenticated } from "../../services/auth";
-import binIcon from '../../assets/img/icons/bin.svg';
-import nCheck from '../../assets/img/icons/n-check.svg';
-import bChat from '../../assets/img/icons/b-chat.svg';
+import binIcon from '../../../assets/img/icons/bin.svg';
+import nCheck from '../../../assets/img/icons/n-check.svg';
+import bChat from '../../../assets/img/icons/b-chat.svg';
 import Moment from 'react-moment';
 import ReactPaginate from 'react-paginate';
 
-class PictureList extends React.Component {
+class PictureIndex extends React.Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       pictures: [],
       visible: false,
@@ -33,6 +33,7 @@ class PictureList extends React.Component {
       total: 0
     }
   }
+  
   componentDidMount() {
     try {
       if (!isAuthenticated()) {
@@ -46,19 +47,24 @@ class PictureList extends React.Component {
       this.setState({
         color: 'danger',
         visible: true,
-        message:
-          "Error"
+        message: "Error"
       });
     }
   }
 
   loadPictures = async () => {
+    const { user_id } = this.props.match.params;
+
     try {
-      const response = await api.get(
-        `/pictures?page=${this.state.page}&paginate=${this.state.perPage}`
+      const responsePictures = await api.get(
+        `/users/${user_id}/pictures?page=${this.state.page}&paginate=${this.state.perPage}`
       );
-      const { pages, total, docs } = response.data;
-      this.setState({ pictures: docs, pages, total });
+      const { pages, total, docs } = responsePictures.data;
+      
+      const responseUser = await api.get(
+        `/users/${user_id}`
+      );
+      this.setState({ pictures: docs, pages, total, user_id, user: responseUser.data });
     } catch (error) {
       console.log('====================================');
       console.log(error);
@@ -68,23 +74,31 @@ class PictureList extends React.Component {
 
   handleRemovePicture = async (e, id) => {
     e.preventDefault();
-    await api.delete(`/pictures/${id}`);
+    
+    const { user_id } = this.state;
+    await api.delete(`/users/${user_id}/pictures/${id}`);
+    
     this.setState({
       color: 'success',
       visible: true,
       message: "Picture deleted!"
     });
+    
     this.loadPictures()
   }
 
   handleRestorePicture = async (e, id) => {
     e.preventDefault();
-    await api.put(`/pictures/${id}/restore`);
+    
+    const { user_id } = this.state;
+    await api.put(`/users/${user_id}/pictures/${id}/restore`);
+    
     this.setState({
       color: 'success',
       visible: true,
       message: "Picture restored!"
     });
+    
     this.loadPictures();
   }
 
@@ -99,9 +113,14 @@ class PictureList extends React.Component {
       this.loadPictures();
     });
   };
-  
+
   render() {
-    const { pictures } = this.state;
+    const { pictures, user } = this.state;
+    let profile;
+    if (user) {
+      profile = user.profile;
+    }
+    
     const pictureActions = (picture) => {
       if (picture.deleted_at) {
         return (
@@ -133,7 +152,7 @@ class PictureList extends React.Component {
             <Card>
               <CardHeader>
                 <CardTitle tag="h5">Pictures</CardTitle>
-                <p className="card-category">List pictures</p>
+                <p className="card-category">Listing pictures from <strong>{profile && profile.first_name}</strong></p>
               </CardHeader>
               <CardBody>
                 {this.state.message && (
@@ -190,6 +209,7 @@ class PictureList extends React.Component {
                 />
               </CardFooter>
             </Card>
+            <Link to='/admin/users'>Go back</Link>
           </Col>
         </Row>
       </div>
@@ -197,4 +217,4 @@ class PictureList extends React.Component {
   }
 }
 
-export default PictureList;
+export default PictureIndex;

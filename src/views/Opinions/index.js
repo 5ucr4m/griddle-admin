@@ -105,10 +105,6 @@ class OpinionIndex extends React.Component {
     this.setState({ visible: !this.state.visible });
   }
 
-  handleAdmin = async (id) => {
-    await api.put(`/opinions/${id}/toggle-admin`);
-  }
-
   handlePageClick = async data => {
     const { selected } = data;
     let page = selected + 1;
@@ -150,7 +146,7 @@ class OpinionIndex extends React.Component {
           <Card>
             <CardHeader>
               <CardTitle tag="h5">Feedback</CardTitle>
-              <p className="card-category">Listing opinions</p>
+              <p className="card-category">Listing feedback</p>
             </CardHeader>
             <CardBody>
               {this.state.message && (

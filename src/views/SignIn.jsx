@@ -10,11 +10,14 @@ import {
   Input,
   Row,
   Col,
-  Alert
+  Alert,
+  Image
 } from "reactstrap";
 import api from "../services/api";
 import { login, isAuthenticated } from "../services/auth";
 import { Redirect } from 'react-router-dom';
+import iconApp from '../assets/img/icon_120x120.png';
+
 
 class SignIn extends React.Component {
   state = {
@@ -69,68 +72,61 @@ class SignIn extends React.Component {
     return (
       <>
         {this.renderRedirect()}
-        <div className="content">
-          <Row>
-            <Col md={{ size: 6, offset: 3 }}>
-              {this.state.message && (
-                <Alert color={this.state.color} isOpen={this.state.visible} toggle={this.onDismiss}>
-                  {this.state.message}
-                </Alert>
-              )}
-            </Col>
-          </Row>
-          <Row style={{ justifyContent: "center" }}>
-            <Col md="4">
-              <Card style={{ width: '20rem' }}>
-                <CardHeader>
-                  <CardTitle tag="h5">SignIn</CardTitle>
-                </CardHeader>
-                <CardBody>
-                  <Form onSubmit={this.handleSignIn}>
-                    <Row>
-                      <Col className="px-1" md="12">
-                        <FormGroup>
-                          <label htmlFor="exampleInputEmail1">
-                            Email address
-                          </label>
-                          <Input
-                            placeholder="Email"
-                            type="email"
-                            onChange={e =>
-                              this.setState({
-                                email: e.target.value
-                              })
-                            }
-                          />
-                        </FormGroup>
-                        <FormGroup>
-                          <label>Password</label>
-                          <Input
-                            placeholder="Password"
-                            type="password"
-                            onChange={e =>
-                              this.setState({
-                                password: e.target.value
-                              })
-                            }
-                          />
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                    <Row style={{ justifyContent: "center" }}>
-                        <Button
-                          className="btn-round"
-                          color="primary"
-                          type="submit"
-                        >
-                          Enter
-                        </Button>
-                    </Row>
-                  </Form>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
+          <div className="content-signin">
+                <Card className="card-signin">
+                  <CardHeader className="header-signin">
+              {/* <CardTitle tag="h5">SignIn</CardTitle> */}
+                    <img src={iconApp} alt="" className="imsg-signin" />
+                  </CardHeader>
+                  <CardBody>
+                    {this.state.message && (
+                      <Alert color={this.state.color} isOpen={this.state.visible} toggle={this.onDismiss}>
+                        {this.state.message}
+                      </Alert>
+                    )}
+                    <Form onSubmit={this.handleSignIn}>
+                      <Row>
+                        <Col className="px-1" md="12">
+                          <FormGroup>
+                            <label htmlFor="exampleInputEmail1">
+                              Email address
+                            </label>
+                            <Input
+                              placeholder="Email"
+                              type="email"
+                              onChange={e =>
+                                this.setState({
+                                  email: e.target.value
+                                })
+                              }
+                            />
+                          </FormGroup>
+                          <FormGroup>
+                            <label>Password</label>
+                            <Input
+                              placeholder="Password"
+                              type="password"
+                              onChange={e =>
+                                this.setState({
+                                  password: e.target.value
+                                })
+                              }
+                            />
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row style={{ justifyContent: "center" }}>
+                          <Button
+                            className="btn-round"
+                            color="primary"
+                            type="submit"
+                          >
+                            Enter
+                          </Button>
+                      </Row>
+                    </Form>
+                  </CardBody>
+                </Card>
         </div>
       </>
     );

@@ -4,6 +4,7 @@ import {
   Col,
   Card,
   CardHeader,
+  CardTitle,
   CardBody,
   CardImg,
   Alert,
@@ -82,6 +83,11 @@ class PictureShow extends React.Component {
   }
   render() {
     const { picture, id } = this.state;
+    const { user } = picture;
+    let profile;
+    if (user) {
+      profile = user.profile;
+    }
     
     return (
       <div className="content">
@@ -94,7 +100,8 @@ class PictureShow extends React.Component {
                 </Alert>
               )}
               <CardHeader>
-                <p className="card-category">{picture.name}</p>
+                <CardTitle tag="h5">{picture.name}</CardTitle>
+                <p className="card-category">Showing picture from <strong>{profile && profile.first_name}</strong></p>
                 <CardImg top style={{width: 'auto'}} src={road} alt="..." />
               </CardHeader>
               <CardBody>

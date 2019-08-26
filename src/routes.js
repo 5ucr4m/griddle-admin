@@ -1,8 +1,11 @@
 import Dashboard from "views/Dashboard.jsx";
 import OpinionIndex from "views/Opinions";
 import OpinionEdit from "views/Opinions/edit.jsx";
+import UserIndex from "views/Users";
+import UserPicturesIndex from "views/Users/Pictures";
 import UserEdit from "views/Users/edit.jsx";
 import PictureShow from "views/Pictures/show.jsx";
+import PictureIndex from "views/Pictures";
 import CommentEdit from "views/Comments/edit.jsx";
 import SignOut from "views/SignOut.jsx";
 // import Notifications from "views/Notifications.jsx";
@@ -21,19 +24,26 @@ var routes = [
     layout: "/admin"
   },
   {
-    path: "/opinions/:id/edit",
-    name: "List Opinions",
-    icon: "nc-icon nc-bulb-63",
-    component: OpinionEdit,
+    path: "/users/:user_id/pictures",
+    name: "List Pictures",
+    icon: "nc-icon nc-single-02",
+    component: UserPicturesIndex,
     layout: "/admin",
     hidden: true
   },
   {
-    path: "/opinions",
-    name: "List Opinions",
-    icon: "nc-icon nc-bulb-63",
-    component: OpinionIndex,
-    layout: "/admin"
+    path: "/users",
+    name: "List Users",
+    icon: "nc-icon nc-circle-10",
+    component: UserIndex,
+    layout: "/admin",
+  },
+  {
+    path: "/pictures",
+    name: "List Pictures",
+    icon: "nc-icon nc-album-2",
+    component: PictureIndex,
+    layout: "/admin",
   },
   {
     path: "/users/:id",
@@ -60,11 +70,26 @@ var routes = [
     hidden: true
   },
   {
+    path: "/opinions/:id/edit",
+    name: "Edit Feedback",
+    icon: "nc-icon nc-bulb-63",
+    component: OpinionEdit,
+    layout: "/admin",
+    hidden: true
+  },
+  {
+    path: "/opinions",
+    name: "Feedback",
+    icon: "nc-icon nc-bulb-63",
+    component: OpinionIndex,
+    layout: "/admin"
+  },
+  {
     path: "/signout",
     name: "Logout",
     component: SignOut,
     layout: "/admin",
-  },
+  }
   // {
   //   path: "/icons",
   //   name: "Icons",

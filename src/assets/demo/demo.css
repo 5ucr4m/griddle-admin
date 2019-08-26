@@ -219,3 +219,27 @@
 .page-link {
   cursor: pointer;
 }
+
+.content-signin {
+  background-color: #f4f3ef;
+  height: -webkit-fill-available;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.content-signin .card-signin {
+  width: 100%;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+}
+.content-signin .card-signin .img-signin {
+  align-items: center;
+  justify-content: center;
+}
+
+.content-signin .card-signin .header-signin {
+  display: flex;
+  justify-content: center;
+}

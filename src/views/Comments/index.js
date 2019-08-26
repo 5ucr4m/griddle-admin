@@ -105,10 +105,6 @@ class CommentIndex extends React.Component {
     this.setState({ visible: !this.state.visible });
   }
 
-  handleAdmin = async (id) => {
-    await api.put(`/comments/${id}/toggle-admin`);
-  }
-
   handlePageClick = async data => {
     const { selected } = data;
     let page = selected + 1;

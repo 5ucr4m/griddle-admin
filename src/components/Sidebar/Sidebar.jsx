@@ -3,7 +3,8 @@ import { NavLink } from "react-router-dom";
 import { Nav } from "reactstrap";
 import PerfectScrollbar from "perfect-scrollbar";
 
-import logo from "logo.svg";
+// import logo from "logo.svg";
+import logo from "../../assets/img/icon_120x120.png";
 
 var ps;
 
@@ -68,6 +69,7 @@ class Sidebar extends React.Component {
                     to={prop.layout + prop.path}
                     className="nav-link"
                     activeClassName="active"
+                    exact
                   >
                     <i className={prop.icon} />
                     <p>{prop.name}</p>
