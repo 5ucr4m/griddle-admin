@@ -4,14 +4,12 @@ import {
   Card,
   CardHeader,
   CardBody,
-  CardTitle,
   FormGroup,
   Form,
   Input,
   Row,
   Col,
   Alert,
-  Image
 } from "reactstrap";
 import api from "../services/api";
 import { login, isAuthenticated } from "../services/auth";

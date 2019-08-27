@@ -53,18 +53,18 @@ class PictureIndex extends React.Component {
   }
 
   loadPictures = async () => {
-    const { user_id } = this.props.match.params;
+    const { id } = this.props.match.params;
 
     try {
       const responsePictures = await api.get(
-        `/users/${user_id}/pictures?page=${this.state.page}&paginate=${this.state.perPage}`
+        `/users/${id}/pictures?page=${this.state.page}&paginate=${this.state.perPage}`
       );
       const { pages, total, docs } = responsePictures.data;
       
       const responseUser = await api.get(
-        `/users/${user_id}`
+        `/users/${id}`
       );
-      this.setState({ pictures: docs, pages, total, user_id, user: responseUser.data });
+      this.setState({ pictures: docs, pages, total, user_id: id, user: responseUser.data });
     } catch (error) {
       console.log('====================================');
       console.log(error);

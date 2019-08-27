@@ -24,21 +24,6 @@ var routes = [
     layout: "/admin"
   },
   {
-    path: "/users/:user_id/pictures",
-    name: "List Pictures",
-    icon: "nc-icon nc-single-02",
-    component: UserPicturesIndex,
-    layout: "/admin",
-    hidden: true
-  },
-  {
-    path: "/users",
-    name: "List Users",
-    icon: "nc-icon nc-circle-10",
-    component: UserIndex,
-    layout: "/admin",
-  },
-  {
     path: "/pictures",
     name: "List Pictures",
     icon: "nc-icon nc-album-2",
@@ -46,12 +31,35 @@ var routes = [
     layout: "/admin",
   },
   {
-    path: "/users/:id",
-    name: "Show Profile",
+    path: "/users/:id/pictures",
+    name: "List Pictures",
+    icon: "nc-icon nc-single-02",
+    component: UserPicturesIndex,
+    layout: "/admin",
+    hidden: true
+  },
+  {
+    path: "/users/:id/edit",
+    name: "List Pictures",
     icon: "nc-icon nc-single-02",
     component: UserEdit,
     layout: "/admin",
     hidden: true
+  },
+  // {
+  //   path: "/users/:id",
+  //   name: "Show Profile",
+  //   icon: "nc-icon nc-single-02",
+  //   component: UserEdit,
+  //   layout: "/admin",
+  //   hidden: true
+  // },
+  {
+    path: "/users",
+    name: "List Users",
+    icon: "nc-icon nc-circle-10",
+    component: UserIndex,
+    layout: "/admin",
   },
   {
     path: "/pictures/:id",
