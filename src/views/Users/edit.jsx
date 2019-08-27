@@ -37,9 +37,6 @@ class UserEdit extends React.Component {
       }
       const { id } = this.props.match.params;
       const response = await api.get(`/users/${id}`);
-      console.log('====================================');
-      console.log(response.data);
-      console.log('====================================');
       const user = response.data;
       const { profile } = user;
       
