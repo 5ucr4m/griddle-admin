@@ -14,7 +14,7 @@ import {
   Label
 } from "reactstrap";
 import api from "../../services/api";
-import { isAuthenticated } from "../../services/auth";
+import { logout, isAuthenticated } from "../../services/auth";
 import { Link } from "react-router-dom";
 
 class CommentEdit extends React.Component {
@@ -41,17 +41,31 @@ class CommentEdit extends React.Component {
       
       this.setState({ comment, id });
     } catch (error) {
-      console.log('====================================');
-      console.log(error);
-      console.log('====================================');
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
     }
 
   }
   
   handleUpdateComment = async e => {
     e.preventDefault();
-    const { comment } = this.state;
-    await api.put(`/comments/${this.state.id}`, { ...comment });
+    try {
+      const { comment } = this.state;
+      await api.put(`/comments/${this.state.id}`, { ...comment });
+    } catch (error) {
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
+    }
     
     this.setState({
       color: 'success',

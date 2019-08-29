@@ -12,7 +12,7 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import api from "../../services/api";
-import { isAuthenticated } from "../../services/auth";
+import { logout, isAuthenticated } from "../../services/auth";
 import binIcon from '../../assets/img/icons/bin.svg';
 import nCheck from '../../assets/img/icons/n-check.svg';
 import pencilIcon from '../../assets/img/icons/pencil.svg';
@@ -42,9 +42,14 @@ class OpinionIndex extends React.Component {
       }
       this.loadOpinions();
     } catch (error) {
-      console.log('====================================');
-      console.log(error);
-      console.log('====================================');
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
+
       this.setState({
         color: 'danger',
         visible: true,
@@ -71,15 +76,30 @@ class OpinionIndex extends React.Component {
       const { pages, total, docs } = response.data;
       this.setState({ opinions: docs, pages, total });
     } catch (error) {
-      console.log('====================================');
-      console.log(error);
-      console.log('====================================');
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
     }
   }
 
   handleRemoveOpinion = async (e, id) => {
     e.preventDefault();
-    await api.delete(`/opinions/${id}`);
+    try {
+      await api.delete(`/opinions/${id}`);
+    } catch (error) {
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
+    }
+
     this.setState({
       color: 'success',
       visible: true,
@@ -91,7 +111,18 @@ class OpinionIndex extends React.Component {
 
   handleRestoreOpinion = async (e, id) => {
     e.preventDefault();
-    await api.put(`/opinions/${id}/restore`);
+    try {
+      await api.put(`/opinions/${id}/restore`);
+    } catch (error) {
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
+    }
+
     this.setState({
       color: 'success',
       visible: true,

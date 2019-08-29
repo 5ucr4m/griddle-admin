@@ -10,7 +10,7 @@ import {
   Alert,
   CardFooter
 } from "reactstrap";
-import { isAuthenticated } from "../../../services/auth";
+import { logout, isAuthenticated } from "../../../services/auth";
 import api from "../../../services/api";
 import { Link } from "react-router-dom";
 import binIcon from '../../../assets/img/icons/bin.svg';
@@ -66,9 +66,13 @@ class PictureIndex extends React.Component {
       );
       this.setState({ pictures: docs, pages, total, user_id: id, user: responseUser.data });
     } catch (error) {
-      console.log('====================================');
-      console.log(error);
-      console.log('====================================');
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
     }
   }
 
@@ -76,7 +80,18 @@ class PictureIndex extends React.Component {
     e.preventDefault();
     
     const { user_id } = this.state;
-    await api.delete(`/users/${user_id}/pictures/${id}`);
+    
+    try {
+      await api.delete(`/users/${user_id}/pictures/${id}`);
+    } catch (error) {
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
+    }
     
     this.setState({
       color: 'success',
@@ -91,7 +106,18 @@ class PictureIndex extends React.Component {
     e.preventDefault();
     
     const { user_id } = this.state;
-    await api.put(`/users/${user_id}/pictures/${id}/restore`);
+    
+    try {
+      await api.put(`/users/${user_id}/pictures/${id}/restore`);
+    } catch (error) {
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
+    }
     
     this.setState({
       color: 'success',

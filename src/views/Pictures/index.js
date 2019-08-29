@@ -12,7 +12,7 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import api from "../../services/api";
-import { isAuthenticated } from "../../services/auth";
+import { logout, isAuthenticated } from "../../services/auth";
 import binIcon from '../../assets/img/icons/bin.svg';
 import nCheck from '../../assets/img/icons/n-check.svg';
 import bChat from '../../assets/img/icons/b-chat.svg';
@@ -60,15 +60,29 @@ class PictureList extends React.Component {
       const { pages, total, docs } = response.data;
       this.setState({ pictures: docs, pages, total });
     } catch (error) {
-      console.log('====================================');
-      console.log(error);
-      console.log('====================================');
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
     }
   }
 
   handleRemovePicture = async (e, id) => {
     e.preventDefault();
-    await api.delete(`/pictures/${id}`);
+    try {
+      await api.delete(`/pictures/${id}`);
+    } catch (error) {
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
+    }
     this.setState({
       color: 'success',
       visible: true,
@@ -79,7 +93,18 @@ class PictureList extends React.Component {
 
   handleRestorePicture = async (e, id) => {
     e.preventDefault();
-    await api.put(`/pictures/${id}/restore`);
+    try {
+      await api.put(`/pictures/${id}/restore`);
+    } catch (error) {
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
+    }
+
     this.setState({
       color: 'success',
       visible: true,

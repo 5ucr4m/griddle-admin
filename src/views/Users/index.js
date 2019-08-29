@@ -18,7 +18,7 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import api from "../../services/api";
-import { isAuthenticated } from "../../services/auth";
+import { logout, isAuthenticated } from "../../services/auth";
 import pencilIcon from '../../assets/img/icons/pencil.svg';
 import binIcon from '../../assets/img/icons/bin.svg';
 import nCheck from '../../assets/img/icons/n-check.svg';
@@ -77,15 +77,31 @@ class UserList extends React.Component {
       this.setState({ users: docs, pages, total });
       
     } catch (error) {
-      console.log('====================================');
-      console.log(error);
-      console.log('====================================');
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
     }
   }
 
   handleRemoveUser = async (e, id) => {
     e.preventDefault();
-    await api.delete(`/users/${id}`);
+    
+    try {
+      await api.delete(`/users/${id}`);
+    } catch (error) {
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
+    }
+
     this.setState({
       color: 'success',
       visible: true,
@@ -96,7 +112,18 @@ class UserList extends React.Component {
 
   handleRestoreUser = async (e, id) => {
     e.preventDefault();
-    await api.put(`/users/${id}/restore`);
+    try {
+      await api.put(`/users/${id}/restore`);
+    } catch (error) {
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
+    }
+
     this.setState({
       color: 'success',
       visible: true,
@@ -110,7 +137,17 @@ class UserList extends React.Component {
   }
 
   handleAdmin = async id => {
-    await api.put(`/users/${id}/toggle-admin`);
+    try {
+      await api.put(`/users/${id}/toggle-admin`);
+    } catch (error) {
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
+    }
   }
 
   handlePageClick = async data => {
@@ -124,13 +161,6 @@ class UserList extends React.Component {
   handleSearch = async e => {
     e.preventDefault();
     const { by_first_name } = this.state;
-    // await api.put(`/profiles/${profile.id}`, { ...profile });
-
-    // this.setState({
-    //   color: 'success',
-    //   visible: true,
-    //   message: "Profile save!"
-    // });
     this.loadUsers(by_first_name);
   }
 

@@ -9,7 +9,7 @@ import {
   CardImg,
   Alert,
 } from "reactstrap";
-import { isAuthenticated } from "../../services/auth";
+import { logout, isAuthenticated } from "../../services/auth";
 import api from "../../services/api";
 import road from '../../assets/img/road.jpg'
 import { Link } from "react-router-dom";
@@ -35,9 +35,15 @@ class PictureShow extends React.Component {
       }
       this.getPicture();
     } catch (error) {
-      console.log('====================================');
-      console.log(error);
-      console.log('====================================');
+
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
+
       this.setState({
         color: 'danger',
         visible: true,
@@ -52,18 +58,42 @@ class PictureShow extends React.Component {
       this.setState({ picture: response.data, id });
       this.loadComments();
     } catch (error) {
-      console.log('====================================');
-      console.log(error);
-      console.log('====================================');
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
     }
   }
   loadComments = async () => {
-    const response = await api.get(`/pictures/${this.state.id}/comments`);
-    this.setState({ comments: response.data });
+    try {
+      const response = await api.get(`/pictures/${this.state.id}/comments`);
+      this.setState({ comments: response.data });
+    } catch (error) {
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
+    }
   }
   handleRemoveComment = async (e, id) => {
     e.preventDefault();
-    await api.delete(`/comments/${id}`);
+    try {
+      await api.delete(`/comments/${id}`);
+    } catch (error) {
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
+    }
     this.setState({
       color: 'success',
       visible: true,
@@ -73,7 +103,18 @@ class PictureShow extends React.Component {
   }
   handleRestoreComment = async (e, id) => {
     e.preventDefault();
-    await api.put(`/comments/${id}/restore`);
+    try {
+      await api.put(`/comments/${id}/restore`);
+    } catch (error) {
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
+    }
+
     this.setState({
       color: 'success',
       visible: true,

@@ -12,7 +12,7 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import api from "../../services/api";
-import { isAuthenticated } from "../../services/auth";
+import { logout, isAuthenticated } from "../../services/auth";
 import binIcon from '../../assets/img/icons/bin.svg';
 import nCheck from '../../assets/img/icons/n-check.svg';
 import Moment from 'react-moment';
@@ -70,16 +70,29 @@ class VoteIndex extends React.Component {
       const { pages, total, docs } = response.data;
       this.setState({ votes: docs, pages, total });
     } catch (error) {
-      console.log('====================================');
-      console.log(error);
-      console.log('====================================');
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
     }
   }
 
   handleRemoveVote = async (e, id) => {
     e.preventDefault();
-    
-    await api.delete(`/votes/${id}`);
+    try {
+      await api.delete(`/votes/${id}`);
+    } catch (error) {
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
+    }
     this.setState({
       color: 'success',
       visible: true,
@@ -91,7 +104,19 @@ class VoteIndex extends React.Component {
 
   handleRestoreVote = async (e, id) => {
     e.preventDefault();
-    await api.put(`/votes/${id}/restore`);
+
+    try {
+      await api.put(`/votes/${id}/restore`);
+    } catch (error) {
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
+    }
+
     this.setState({
       color: 'success',
       visible: true,
@@ -106,7 +131,17 @@ class VoteIndex extends React.Component {
   }
 
   handleAdmin = async (id) => {
-    await api.put(`/votes/${id}/toggle-admin`);
+    try {
+      await api.put(`/votes/${id}/toggle-admin`);
+    } catch (error) {
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
+    }
   }
 
   handlePageClick = async data => {

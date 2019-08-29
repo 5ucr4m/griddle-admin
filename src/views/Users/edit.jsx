@@ -13,7 +13,7 @@ import {
   Alert
 } from "reactstrap";
 import api from "../../services/api";
-import { isAuthenticated } from "../../services/auth";
+import { logout, isAuthenticated } from "../../services/auth";
 import { Link } from "react-router-dom";
 
 class UserEdit extends React.Component {
@@ -42,9 +42,13 @@ class UserEdit extends React.Component {
       
       this.setState({ user, profile });
     } catch (error) {
-      console.log('====================================');
-      console.log(error);
-      console.log('====================================');
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
     }
 
   }
@@ -52,7 +56,17 @@ class UserEdit extends React.Component {
   handleUpdateProfile = async e => {
     e.preventDefault();
     const { profile } = this.state;
-    await api.put(`/profiles/${profile.id}`, { ...profile });
+    try {
+      await api.put(`/profiles/${profile.id}`, { ...profile });
+    } catch (error) {
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
+    }
     
     this.setState({
       color: 'success',

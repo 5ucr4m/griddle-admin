@@ -1,6 +1,6 @@
 import React from "react";
 
-import { isAuthenticated } from "../services/auth";
+import { logout, isAuthenticated } from "../services/auth";
 import {
   Card,
   CardHeader,
@@ -66,9 +66,13 @@ class Dashboard extends React.Component {
       });
 
     } catch (error) {
-      console.log('====================================');
-      console.log(error);
-      console.log('====================================');
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
     }
     const dataChartUser = {
       labels: [
