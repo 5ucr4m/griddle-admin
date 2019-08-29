@@ -143,7 +143,7 @@ class PictureShow extends React.Component {
               <CardHeader>
                 <CardTitle tag="h5">{picture.name}</CardTitle>
                 <p className="card-category">Showing picture from <strong>{profile && profile.first_name}</strong></p>
-                <CardImg top style={{width: 'auto'}} src={road} alt="..." />
+                <CardImg top src={picture.path} alt="..." />
               </CardHeader>
               <CardBody>
               </CardBody>
