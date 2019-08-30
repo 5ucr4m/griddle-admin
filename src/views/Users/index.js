@@ -51,9 +51,14 @@ class UserList extends React.Component {
       }
       this.loadUsers();
     } catch (error) {
-      console.log('====================================');
-      console.log(error);
-      console.log('====================================');
+      const { response } = error
+      if (response) {
+        const { error } = response.data
+        if (error === 'Token invalid') {
+          logout()
+        }
+      }
+
       this.setState({
         color: 'danger',
         visible: true,

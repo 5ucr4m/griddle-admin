@@ -10,7 +10,7 @@ import {
   Input,
   Row,
   Col,
-  Alert
+  Alert,
 } from "reactstrap";
 import api from "../../services/api";
 import { logout, isAuthenticated } from "../../services/auth";
@@ -86,7 +86,34 @@ class UserEdit extends React.Component {
       <>
         <div className="content">
           <Row>
-            <Col md="12">
+            <Col md="4">
+              <Card className="card-user">
+                <div className="image">
+                  <img
+                    alt="..."
+                    src={require("assets/img/damir-bosnjak.jpg")}
+                  />
+                </div>
+                <CardBody>
+                  <div className="author">
+                    <a href="#pablo" onClick={e => e.preventDefault()}>
+                      <img
+                        alt="..."
+                        className="avatar border-gray"
+                        src={profile && profile.profile_picture ? profile.profile_picture : require("assets/img/default-avatar.png")}
+                      />
+                      <h5 className="title">{profile && profile.first_name}</h5>
+                    </a>
+                    <p className="description">{user.email}</p>
+                  </div>
+                  {/* <p className="description text-center">
+                    "I like the way you work it <br />
+                    No diggity <br />I wanna bag it up"
+                  </p> */}
+                </CardBody>
+              </Card>
+            </Col>
+            <Col md="8">
               <Card className="card-user">
                 <CardHeader>
                   <CardTitle tag="h5">Editing Profile</CardTitle>

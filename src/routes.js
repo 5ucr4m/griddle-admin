@@ -40,7 +40,7 @@ var routes = [
   },
   {
     path: "/users/:id/edit",
-    name: "List Pictures",
+    name: "Edit User",
     icon: "nc-icon nc-single-02",
     component: UserEdit,
     layout: "/admin",

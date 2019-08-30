@@ -11,7 +11,6 @@ import {
 } from "reactstrap";
 import { logout, isAuthenticated } from "../../services/auth";
 import api from "../../services/api";
-import road from '../../assets/img/road.jpg'
 import { Link } from "react-router-dom";
 import CommentIndex from '../Comments';
 import VoteIndex from '../Votes';
