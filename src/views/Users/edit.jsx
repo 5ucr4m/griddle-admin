@@ -100,7 +100,7 @@ class UserEdit extends React.Component {
                       <img
                         alt="..."
                         className="avatar border-gray"
-                        src={profile && profile.profile_picture ? profile.profile_picture : require("assets/img/default-avatar.png")}
+                        src={profile && profile.picture ? profile.picture : require("assets/img/default-avatar.png")}
                       />
                       <h5 className="title">{profile && profile.first_name}</h5>
                     </a>
