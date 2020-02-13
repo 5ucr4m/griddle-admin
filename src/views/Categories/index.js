@@ -8,7 +8,14 @@ import {
   CardBody,
   Table,
   Alert,
-  Button
+  Button,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  FormGroup,
+  Label,
+  Input
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import api from "../../services/api";
@@ -24,11 +31,9 @@ class CategoryList extends React.Component {
     this.state = {
       categories: [],
       visible: false,
-      color: "",
-      message: "",
-      perPage: 100,
-      page: 1,
-      total: 0
+      description: "",
+      disabled: false,
+      modalVisible: false
     };
   }
   componentDidMount() {
@@ -51,6 +56,29 @@ class CategoryList extends React.Component {
       const response = await api.get(`/categories?all=true`);
       const { data } = response;
       this.setState({ categories: data });
+    } catch (error) {
+      const { response } = error;
+      if (response) {
+        const { error } = response.data;
+        if (error === "Token invalid") {
+          logout();
+        }
+      }
+    }
+  };
+
+  toggle = () => {
+    this.setState({ modalVisible: !this.state.modalVisible });
+  };
+
+  createCategory = async () => {
+    this.setState({ disabled: true });
+    try {
+      const { description } = this.state;
+      await api.post(`/categories`, { description });
+      this.toggle();
+      this.loadCategories();
+      this.setState({ disabled: false });
     } catch (error) {
       const { response } = error;
       if (response) {
@@ -159,7 +187,9 @@ class CategoryList extends React.Component {
               <CardHeader>
                 <CardTitle tag="h5">Categories</CardTitle>
                 <p className="card-category">List categories</p>
-                <Button color="primary">New Category</Button>
+                <Button onClick={() => this.toggle()} color="primary">
+                  New Category
+                </Button>
               </CardHeader>
               <CardBody>
                 {this.state.message && (
@@ -202,6 +232,40 @@ class CategoryList extends React.Component {
             </Card>
           </Col>
         </Row>
+        <Modal isOpen={this.state.modalVisible} toggle={() => this.toggle()}>
+          <ModalHeader toggle={() => this.toggle()}>
+            Create new category
+          </ModalHeader>
+          <ModalBody>
+            <FormGroup>
+              <Label for="description">Description</Label>
+              <Input
+                type="text"
+                name="description"
+                id="description"
+                placeholder="Description"
+                value={this.state.description}
+                onChange={evt =>
+                  this.setState({ description: evt.target.value })
+                }
+              />
+            </FormGroup>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              color="primary"
+              disabled={
+                this.state.disabled || this.state.description.length < 3
+              }
+              onClick={() => this.createCategory()}
+            >
+              Save
+            </Button>{" "}
+            <Button color="secondary" onClick={() => this.toggle()}>
+              Cancel
+            </Button>
+          </ModalFooter>
+        </Modal>
       </div>
     );
   }
