@@ -6,6 +6,7 @@ import UserPicturesIndex from "views/Users/Pictures";
 import UserEdit from "views/Users/edit.jsx";
 import PictureShow from "views/Pictures/show.jsx";
 import PictureIndex from "views/Pictures";
+import CategoriesIndex from "views/Categories";
 import CommentEdit from "views/Comments/edit.jsx";
 import SignOut from "views/SignOut.jsx";
 // import Notifications from "views/Notifications.jsx";
@@ -28,7 +29,7 @@ var routes = [
     name: "List Pictures",
     icon: "nc-icon nc-album-2",
     component: PictureIndex,
-    layout: "/admin",
+    layout: "/admin"
   },
   {
     path: "/users/:id/pictures",
@@ -59,7 +60,7 @@ var routes = [
     name: "List Users",
     icon: "nc-icon nc-circle-10",
     component: UserIndex,
-    layout: "/admin",
+    layout: "/admin"
   },
   {
     path: "/pictures/:id",
@@ -68,6 +69,13 @@ var routes = [
     component: PictureShow,
     layout: "/admin",
     hidden: true
+  },
+  {
+    path: "/categories",
+    name: "List Categories",
+    icon: "nc-icon nc-bullet-list-67",
+    component: CategoriesIndex,
+    layout: "/admin"
   },
   {
     path: "/comments/:id/edit",
@@ -96,7 +104,7 @@ var routes = [
     path: "/signout",
     name: "Logout",
     component: SignOut,
-    layout: "/admin",
+    layout: "/admin"
   }
   // {
   //   path: "/icons",
