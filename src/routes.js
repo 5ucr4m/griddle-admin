@@ -1,4 +1,5 @@
 import Dashboard from "views/Dashboard.jsx";
+import Config from "views/Config";
 import OpinionIndex from "views/Opinions";
 import OpinionEdit from "views/Opinions/edit.jsx";
 import UserIndex from "views/Users";
@@ -98,6 +99,13 @@ var routes = [
     name: "Feedback",
     icon: "nc-icon nc-bulb-63",
     component: OpinionIndex,
+    layout: "/admin"
+  },
+  {
+    path: "/config",
+    name: "Config",
+    icon: "nc-icon nc-settings-gear-65",
+    component: Config,
     layout: "/admin"
   },
   {
